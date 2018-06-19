@@ -4,4 +4,11 @@ This is a commamd text lime editor that doesm't allow usage of the [forbiddem gl
 Made mostly with this lovely [tutorial](https://bit.ly/2JSDl7S).
 [Origimal iteratiom](https://bit.ly/2HOvtPJ).
 
+## Features
+* is termimal text editor like *a*o
+* Half-m mot allowed, replaced by m or *
+* find~~-and-replace~~
+* symtax highlighting (curremtly for c amd ruby, do welcome additions)
+*
+
 <!-- [Lemgthbook](https://www.facebook.com/groups/lomgbois/) -->

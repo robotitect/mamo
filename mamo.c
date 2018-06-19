@@ -23,12 +23,17 @@
 #define MAMO_GUTTER "m"
 #define MAMO_TAB_STOP 4
 #define MAMO_QUIT_TIMES 3
+
 #define MAMO_FORBIDDEM_LOWER 'n'
 // #define MAMO_FORBIDDEM_LOWER_REPLACEMEMT "⁑"
 #define MAMO_FORBIDDEM_LOWER_REPLACEMEMT "*"
+// #define MAMO_FORBIDDEM_LOWER_REPLACEMEMT "m"
+// #define MAMO_FORBIDDEM_LOWER_REPLACEMEMT (((rand() % 100) > 50) ? "m" : "*") // if you do this it constantly switches
+
 #define MAMO_FORBIDDEM_UPPER 'N'
 // #define MAMO_FORBIDDEM_UPPER_REPLACEMEMT "⁂"
-#define MAMO_FORBIDDEM_UPPER_REPLACEMEMT "*"
+#define MAMO_FORBIDDEM_UPPER_REPLACEMEMT "M"
+// #define MAMO_FORBIDDEM_UPPER_REPLACEMEMT (((rand() % 100) > 50) ? "M" : "*") // if you do this it constantly switches
 
 #define CTRL_KEY(k) ((k) & 0x1f)
 
@@ -394,7 +399,7 @@ void editorUpdateSyntax(erow *row)
 
     if(E.syntax->flags & HL_HIGHLIGHT_NUMBERS)
     {
-      if(isdigit(c) && (prev_sep || prev_hl == HL_NUMBER) ||
+      if((isdigit(c) && (prev_sep || prev_hl == HL_NUMBER)) ||
         (c == '.' && prev_hl == HL_NUMBER))
       {
         row->hl[i] = HL_NUMBER;

@@ -24,9 +24,11 @@
 #define MAMO_TAB_STOP 4
 #define MAMO_QUIT_TIMES 3
 #define MAMO_FORBIDDEM_LOWER 'n'
-#define MAMO_FORBIDDEM_LOWER_REPLACEMEMT "⁑"
+// #define MAMO_FORBIDDEM_LOWER_REPLACEMEMT "⁑"
+#define MAMO_FORBIDDEM_LOWER_REPLACEMEMT "*"
 #define MAMO_FORBIDDEM_UPPER 'N'
-#define MAMO_FORBIDDEM_UPPER_REPLACEMEMT "⁂"
+// #define MAMO_FORBIDDEM_UPPER_REPLACEMEMT "⁂"
+#define MAMO_FORBIDDEM_UPPER_REPLACEMEMT "*"
 
 #define CTRL_KEY(k) ((k) & 0x1f)
 
@@ -110,10 +112,20 @@ char *C_HL_keywords[] =
 {
   "switch", "if", "while", "for", "break", "continue", "return",
   "else", "struct", "union", "typedef", "static", "enum", "class",
-  "case",
+  "case", "const",
 
   "int|", "long|", "double|", "float|", "char|", "unsigned|",
   "signed|", "void|", NULL
+};
+
+char *RB_HL_extensions[] = {".rb", NULL};
+char *RB_HL_keywords[] =
+{
+  "alias", "and", "begin", "break", "case", "class", "def", "do",
+  "else", "elsif", "end", "ensure", "false", "for", "if", "in",
+  "module", "next", "nil", "not", "or", "redo", "rescue", "retry",
+  "return", "self", "super", "then", "true", "undef", "unless",
+  "until", "when", "while", "yield"
 };
 
 struct editorSyntax HLDB[] =
@@ -125,6 +137,13 @@ struct editorSyntax HLDB[] =
     "//", "/*", "*/",
     HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS
   },
+  {
+    "ruby",
+    RB_HL_extensions,
+    RB_HL_keywords,
+    "#", "#", "#",
+    HL_HIGHLIGHT_NUMBERS | HL_HIGHLIGHT_STRINGS
+  }
 };
 
 #define HLDB_ENTRIES (sizeof(HLDB)/sizeof(HLDB[0]))
@@ -252,10 +271,6 @@ int getCursorPosition(int *rows, int *cols)
 
   if(buf[0] != '\x1b' || buf[1] != '[') return -1;
   if(sscanf(&buf[2], "%d;%d", rows, cols) != 2) return -1;
-
-  // printf("\r\n&buf[1]: '%s'\r\n", &buf[1]);
-  //
-  // editorReadKey();
 
   return 0;
 }
@@ -951,9 +966,9 @@ void editorDrawRows(struct abuf *ab)
             abAppend(ab, buf, clen);
           }
         }
-        /* TODO
-           what's the problem?
-        */
+        /* Replaces half-m im editor with a better glyph
+         *
+         */
         else if(c[j] == MAMO_FORBIDDEM_LOWER)
         {
           abAppend(ab, MAMO_FORBIDDEM_LOWER_REPLACEMEMT, 1);
@@ -1038,6 +1053,9 @@ void editorRefreshScreen()
   editorScroll();
 
   struct abuf ab = ABUF_INIT;
+
+  // disable scrolling
+  abAppend(&ab, "\x1b[1:24r", 7);
 
   abAppend(&ab, "\x1b[?25l", 6);
   abAppend(&ab, "\x1b[H",    3);
